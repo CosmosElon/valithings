@@ -22,7 +22,7 @@ gitopiad tx staking create-validator \
   --commission-rate "0.1" \
   --min-self-delegation "1" \
   --pubkey  $(gitopiad tendermint show-validator) \
-  --moniker STAVRguide \
+  --moniker "" \
   --chain-id gitopia \
   --identity="" \
   --details="" \

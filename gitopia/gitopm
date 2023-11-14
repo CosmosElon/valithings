@@ -12,9 +12,8 @@ curl -s https://raw.githubusercontent.com/CosmosElon/valithings/main/logoelon | 
 PS3='Select an action: '
 options=(
 "Install Node"
-"Create wallet"
-"Check node logs"
 "Synchronization via StateSync"
+"Create wallet"
 "Exit")
 select opt in "${options[@]}"
 do

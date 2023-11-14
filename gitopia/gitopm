@@ -37,6 +37,7 @@ echo -e "\e[1m\e[32m1. Updating packages and dependencies--> \e[0m" && sleep 1
 apt-get update -y && apt-get upgrade -y
 apt install software-properties-common nano git make ufw jq -y
 sudo apt install snapd
+sudo apt-get install gcc
 
 echo -e "        \e[1m\e[32m2. Installing GO--> \e[0m" && sleep 1
 #INSTALL GO

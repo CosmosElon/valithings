@@ -6,12 +6,6 @@
 wget -O gitopm https://raw.githubusercontent.com/CosmosElon/valithings/main/gitopia/gitopm && chmod +x gitopm && ./gitopm
 ```
 
-## Create/recover wallet
-```python
-gitopiad keys add <walletname>
-gitopiad keys add <walletname> --recover
-```
-
 ### Create validator
 ```python
 gitopiad tx staking create-validator \

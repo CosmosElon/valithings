@@ -3,7 +3,7 @@
 # Auto-install Node and Sync via StateSync
 
 ```python
-wget -O gitopm https://raw.githubusercontent.com/CosmosElon/valithings/main/Source/sourcem && chmod +x sourcem && ./sourcem
+wget -O sourcem https://raw.githubusercontent.com/CosmosElon/valithings/main/Source/sourcem && chmod +x sourcem && ./sourcem
 ```
 
 ### Create validator

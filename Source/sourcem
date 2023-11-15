@@ -11,8 +11,7 @@ curl -s https://raw.githubusercontent.com/CosmosElon/valithings/main/logoelon | 
 
 PS3='Select an action: '
 options=(
-"Install Node"
-"Synchronization via StateSync"
+"Install Node and Sync via StateSync"
 "Create wallet"
 "Exit")
 select opt in "${options[@]}"
@@ -28,7 +27,7 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 read Validator_Name
 echo "_|-_|-_|-_|-_|-_|-_|"
 echo export Validator_Name=${Validator_Name} >> $HOME/.bash_profile
-echo export CHAIN_ID="gitopia" >> $HOME/.bash_profile
+echo export CHAIN_ID="source" >> $HOME/.bash_profile
 source ~/.bash_profile
 
 echo -e "\e[1m\e[32m1. Updating packages and dependencies--> \e[0m" && sleep 1
@@ -48,86 +47,65 @@ go version
 echo -e "              \e[1m\e[32m3. Downloading and building binaries--> \e[0m" && sleep 1
 #INSTALL
 cd $HOME
-git clone https://github.com/gitopia/gitopia
-cd gitopia
-git checkout v3.3.0
+git clone git clone https://github.com/Source-Protocol-Cosmos/source.git
+cd source
+git checkout v3.0.0
 make install
 
-gitopiad init $Validator_Name --chain-id $CHAIN_ID
+sourced config chain-id source-1
+sourced init $Validator_Name --chain-id source-1
 
-cd && git clone https://github.com/gitopia/mainnet && cd mainnet
-tar -xzf genesis.tar.gz
-cp genesis.json ~/.gitopia/config/genesis.json
-wget -O $HOME/.gitopia/config/addrbook.json "https://raw.githubusercontent.com/CosmosElon/valithings/main/gitopia/addrbook.json"
+curl -s https://ss.nodeist.net/source/genesis.json > $HOME/.source/config/genesis.json
+curl -s https://ss.nodeist.net/source/addrbook.json > $HOME/.source/config/addrbook.json
 
 
 echo -e "                     \e[1m\e[32m4. Node optimization and improvement--> \e[0m" && sleep 1
 
-sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0ulore\"/" $HOME/.gitopia/config/app.toml
-sed -i -e "s/^filter_peers *=.*/filter_peers = \"true\"/" $HOME/.gitopia/config/config.toml
-external_address=$(wget -qO- eth0.me) 
-sed -i.bak -e "s/^external_address *=.*/external_address = \"$external_address:26656\"/" $HOME/.gitopia/config/config.toml
-peers="4cf66531681c92f15c95c25bd1bff524f9dca35e@65.109.154.181:26656,b2f764694d52e09793d68259d584ece0c194b6fe@65.108.229.93:26656"
-sed -i.bak -e "s/^persistent_peers *=.*/persistent_peers = \"$peers\"/" $HOME/.gitopia/config/config.toml
-seeds=""
-sed -i.bak -e "s/^seeds =.*/seeds = \"$seeds\"/" $HOME/.gitopia/config/config.toml
-sed -i 's/max_num_inbound_peers =.*/max_num_inbound_peers = 50/g' $HOME/.gitopia/config/config.toml
-sed -i 's/max_num_outbound_peers =.*/max_num_outbound_peers = 50/g' $HOME/.gitopia/config/config.toml
+SEEDS=""
+PEERS="79adf04741f4a019684efc73e42467cb7d6d3a69@148.251.19.41:25656,08de235f51d2fa6f859393acae09af39480390b0@65.109.165.222:26656,19f75a1aea4cdf8ce987b3d4e1ef6617eb3604b3@95.214.53.20:27446,79e95f9d26c6f960881ab59446a5a74b9f5d51dc@148.251.13.186:15856,90d283d29369a70c7f1196e86b6b71bfb91dfa19@65.109.142.63:26656,b0f0c42206849270e1531c2a4c8a59c4958edebe@162.19.238.210:26656,6d2c0bd288aa2a9251535ea9a75dee27d1f93227@158.220.82.120:32656,8f10b3366ac4a27f544f0269f4655bcc46edffae@5.181.190.76:11056,ee862b85f880471c3aca049bbcf002993f69ee9d@65.109.9.207:26656,ebc272824924ea1a27ea3183dd0b9ba713494f83@146.19.24.25:27446,c223adbf2ba594cb6254a82fff92c00d14bca5c2@147.182.211.27:26656,9be357084a37025d8434ba085f3aa1d6920ecace@65.108.128.201:15856,282a6ec8371ea665a1820a896238032d7411f0db@78.46.60.173:3000,68d8dc20c0bdf5888448b66c21691630f0d94ab8@75.119.132.25:30656,39d07822aa1757059b0f0de49a8a0f45553eacb5@95.217.160.123:26656,4dad62bf9897861c5f24f76ccbe0d79aa15f46a7@51.81.49.176:15856,0c7313fe79b0859cd48de249b6289da597b7d0a6@65.21.248.172:26656,82898535a6b219aeeff9973d687347bca2339fc0@65.108.230.113:20056,297f2d459b783acffef3623b9192ffef64d26122@95.216.46.125:28656,cc0533b6e6726ee0e88045e339ef9ec0e8c1f9a6@64.227.2.51:26656,7347b05f140e4ed5d3da7b26c754a486dc1d2ecd@142.132.253.112:32656,a43ca8d53c5bc6727dd2eebe7b1a1350bcecbae6@135.181.198.246:26656,f83198f43b12c724a4705c40f32bb1e8fb276109@49.36.239.162:26656,d90416ec62880271c41540cbad3a0cfa3e064011@149.102.132.207:32656"
+sed -i 's|^seeds *=.*|seeds = "'$SEEDS'"|; s|^persistent_peers *=.*|persistent_peers = "'$PEERS'"|' $HOME/.source/config/config.toml
+
+sed -i 's|^pruning *=.*|pruning = "custom"|g' $HOME/.source/config/app.toml
+sed -i 's|^pruning-keep-recent  *=.*|pruning-keep-recent = "100"|g' $HOME/.source/config/app.toml
+sed -i 's|^pruning-interval *=.*|pruning-interval = "10"|g' $HOME/.source/config/app.toml
+sed -i 's|^snapshot-interval *=.*|snapshot-interval = 0|g' $HOME/.source/config/app.toml
+
+sed -i 's|^minimum-gas-prices *=.*|minimum-gas-prices = "0.025usource"|g' $HOME/.source/config/app.toml
+sed -i 's|^prometheus *=.*|prometheus = true|' $HOME/.source/config/config.toml
 
 
-
-# pruning and indexer
-pruning="custom" && \
-pruning_keep_recent="100" && \
-pruning_keep_every="0" && \
-pruning_interval="10" && \
-sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" ~/.gitopia/config/app.toml && \
-sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" ~/.gitopia/config/app.toml && \
-sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" ~/.gitopia/config/app.toml && \
-sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" ~/.gitopia/config/app.toml
-
-
-sudo tee /etc/systemd/system/gitopiad.service > /dev/null <<EOF
+sudo tee /etc/systemd/system/sourced.service > /dev/null << EOF
 [Unit]
-Description=gitopia
+Description=source node
 After=network-online.target
-
 [Service]
 User=$USER
-ExecStart=$(which gitopiad) start
+ExecStart=$(which sourced) start
 Restart=on-failure
-RestartSec=3
-LimitNOFILE=65535
-
+RestartSec=10
+LimitNOFILE=10000
 [Install]
 WantedBy=multi-user.target
 EOF
 
+sourced tendermint unsafe-reset-all --home $HOME/.source --keep-addr-book
+
+STATE_SYNC_RPC=https://rpc-source.nodeist.net:443
+LATEST_HEIGHT=$(curl -s $STATE_SYNC_RPC/block | jq -r .result.block.header.height)
+SYNC_BLOCK_HEIGHT=$(($LATEST_HEIGHT - 1000))
+SYNC_BLOCK_HASH=$(curl -s "$STATE_SYNC_RPC/block?height=$SYNC_BLOCK_HEIGHT" | jq -r .result.block_id.hash)
+
+sed -i   -e "s|^enable *=.*|enable = true|"   -e "s|^rpc_servers *=.*|rpc_servers = "$STATE_SYNC_RPC,$STATE_SYNC_RPC"|"   -e "s|^trust_height *=.*|trust_height = $SYNC_BLOCK_HEIGHT|"   -e "s|^trust_hash *=.*|trust_hash = "$SYNC_BLOCK_HASH"|"   $HOME/.source/config/config.toml
 
 # enable service
 sudo systemctl daemon-reload
-sudo systemctl enable gitopiad
+sudo systemctl enable sourced
+sudo systemctl restart sourced && sudo journalctl -fu sourced -o cat
 
 echo '=============== SETUP FINISHED ==================='
 echo -e 'Congratulations:        \e[1m\e[32mSUCCESSFUL NODE INSTALLATION\e[0m'
-echo -e 'To check logs:        \e[1m\e[33mjournalctl -u gitopiad -f -o cat\e[0m'
+echo -e 'To check logs:        \e[1m\e[33mjournalctl -u sourced -f -o cat\e[0m'
 echo -e "To check sync status: \e[1m\e[35mcurl -s localhost:26657/status\e[0m"
-
-break
-;;
-"Synchronization via StateSync")
-SNAP_RPC=http://gitopia.rpc.m.stavr.tech:51057
-LATEST_HEIGHT=$(curl -s $SNAP_RPC/block | jq -r .result.block.header.height); \
-BLOCK_HEIGHT=$((LATEST_HEIGHT - 300)); \
-TRUST_HASH=$(curl -s "$SNAP_RPC/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
-sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
-s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"$SNAP_RPC,$SNAP_RPC\"| ; \
-s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
-s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"| ; \
-s|^(seeds[[:space:]]+=[[:space:]]+).*$|\1\"\"|" $HOME/.gitopia/config/config.toml
-gitopiad tendermint unsafe-reset-all --home /root/.gitopia
-wget -O $HOME/.gitopia/config/addrbook.json "https://raw.githubusercontent.com/CosmosElon/valithings/main/gitopia/addrbook.json"
-systemctl restart gitopiad && journalctl -u gitopiad -f -o cat
 
 break
 ;;
@@ -138,7 +116,7 @@ echo "_|-_|-_|-_|-_|-_|-_|"
 read Wallet
 echo export Wallet=${Wallet} >> $HOME/.bash_profile
 source ~/.bash_profile
-gitopiad keys add $Wallet
+sourced keys add $Wallet
 echo -e "      \e[1m\e[32m!!!!!!!!!SAVE!!!!!!!!!!!!!!!!SAVE YOUR MNEMONIC PHRASE!!!!!!!!!SAVE!!!!!!!!!!!!!!!!\e[0m'"
 
 break

@@ -47,7 +47,7 @@ go version
 echo -e "              \e[1m\e[32m3. Downloading and building binaries--> \e[0m" && sleep 1
 #INSTALL
 cd $HOME
-git clone git clone https://github.com/Source-Protocol-Cosmos/source.git
+git clone https://github.com/Source-Protocol-Cosmos/source.git
 cd source
 git checkout v3.0.0
 make install

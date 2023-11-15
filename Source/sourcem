@@ -11,14 +11,14 @@ curl -s https://raw.githubusercontent.com/CosmosElon/valithings/main/logoelon | 
 
 PS3='Select an action: '
 options=(
-"Install Node and Sync via StateSync"
+"Install Node"
 "Create wallet"
 "Exit")
 select opt in "${options[@]}"
 do
 case $opt in
 
-"Install Node and Sync via StateSync")
+"Install Node")
 echo "*********************"
 echo -e "\e[1m\e[35m		Lets's begin\e[0m"
 echo "*********************"
